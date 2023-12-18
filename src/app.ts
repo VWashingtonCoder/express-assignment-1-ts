@@ -132,6 +132,35 @@ app.patch("/dogs/:id", async (req, res) => {
   }
 });
 
+// Delete endpoint
+app.delete("/dogs/:id", async (req, res) => {
+  const { id } = req.params;
+
+  if (isNaN(+id)) {
+    return res
+      .status(400)
+      .json({ message: "id should be a number" });
+  }
+
+  const dog = await prisma.dog.findUnique({
+    where: {
+      id: +id,
+    },
+  });
+
+  if (!dog) {
+    return res.status(204).send();
+  }
+
+  await prisma.dog.delete({
+    where: {
+      id: +id,
+    },
+  });
+
+  res.status(200).json(dog);
+});
+
 // all your code should go above this line
 app.use(errorHandleMiddleware);
 
