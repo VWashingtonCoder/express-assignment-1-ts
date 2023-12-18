@@ -6,7 +6,7 @@ import "express-async-errors";
 const app = express();
 app.use(express.json());
 // All code should go below this line
-// Default endpoint
+// Default endpoint -- Delete before turn in
 app.get("/", (req, res) => {
   res.send("<h1>Server Up & Running</h1>");
 });
@@ -14,13 +14,14 @@ app.get("/", (req, res) => {
 // Index endpoint
 app.get("/dogs", async (req, res) => {
   const dogs = await prisma.dog.findMany();
-  res.json(dogs);
+  res.status(200).json(dogs);
 });
 
 // all your code should go above this line
 app.use(errorHandleMiddleware);
 
 const port = process.env.NODE_ENV === "test" ? 3001 : 3000;
+
 app.listen(port, () =>
   console.log(`
 🚀 Server ready at: http://localhost:${port}
