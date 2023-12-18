@@ -1,16 +1,14 @@
 import express from "express";
 import { prisma } from "../prisma/prisma-instance";
-import { Dog } from "@prisma/client";
 import { errorHandleMiddleware } from "./error-handler";
 import "express-async-errors";
-import { clearDb } from "../prisma/clearDb";
 
 const app = express();
 app.use(express.json());
 // All code should go below this line
-// Default endpoint -- Delete before turn in
+// Default endpoint (example)
 app.get("/", (req, res) => {
-  res.send("<h1>Server Up & Running</h1>");
+  res.json({ message: "Hello World!" });
 });
 
 // Index endpoint
