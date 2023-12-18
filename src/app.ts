@@ -17,6 +17,25 @@ app.get("/dogs", async (req, res) => {
   res.status(200).json(dogs);
 });
 
+// Show endpoint
+app.get("/dogs/:id", async (req, res) => {
+  const { id } = req.params;
+
+  if (isNaN(+id)) {
+    return res.status(400).json({ message: "id should be a number" });
+  }
+
+  const dog = await prisma.dog.findUnique({
+    where: {
+      id: +id,
+    },
+  });
+  
+  dog 
+    ? res.status(200).json(dog) 
+    : res.status(204).send();
+});
+
 // all your code should go above this line
 app.use(errorHandleMiddleware);
 
