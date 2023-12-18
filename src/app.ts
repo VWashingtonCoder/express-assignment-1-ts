@@ -3,6 +3,7 @@ import { prisma } from "../prisma/prisma-instance";
 import { Dog } from "@prisma/client";
 import { errorHandleMiddleware } from "./error-handler";
 import "express-async-errors";
+import { clearDb } from "../prisma/clearDb";
 
 const app = express();
 app.use(express.json());
@@ -86,6 +87,46 @@ app.post("/dogs", async (req, res) => {
       data: dogData,
     });
     res.status(201).json(dog);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+// Update endpoint
+app.patch("/dogs/:id", async (req, res) => {
+  const { id } = req.params;
+  const body = req.body;
+  const bodyKeys = Object.keys(body);
+  const dogData = {
+    name: body?.name,
+    description: body?.description,
+    breed: body?.breed,
+    age: body?.age,
+  };
+  const errors: string[] = [];
+
+  bodyKeys.map((key) => {
+    if (
+      key !== "name" &&
+      key !== "description" &&
+      key !== "breed" &&
+      key !== "age"
+    )
+      errors.push(`'${key}' is not a valid key`);
+  });
+
+  if (errors.length > 0) {
+    return res.status(400).json({ errors });
+  }
+
+  try {
+    const updatedDog = await prisma.dog.update({
+      where: {
+        id: +id,
+      },
+      data: dogData,
+    });
+    res.status(201).json(updatedDog);
   } catch (error) {
     res.status(500).json(error);
   }
