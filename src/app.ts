@@ -6,6 +6,12 @@ import "express-async-errors";
 const app = express();
 app.use(express.json());
 // All code should go below this line
+app.get("/", (req, res) => {
+  res.send("<h1>Server Up & Running</h1>");
+});
+
+
+
 
 // all your code should go above this line
 app.use(errorHandleMiddleware);
